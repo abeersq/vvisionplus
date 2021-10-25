@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>VisionPlus</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <!--script src="/socket.io-encrypt/index.js"></script-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+<style media="screen">
+html, body {
+  background: -webkit-linear-gradient(330deg, #278e8b , #2a91bf);
+  background: linear-gradient(120deg, #278e8b , #2a91bf);
+  overflow: hidden;
+}
+  .big_box{
+  background: rgba(255, 255, 255, 0.1);
+  height: 75%;
+  border-radius: 0.2em;
+  position: relative;
+  box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: auto;
+  }
+  .message_box{
+    height: 300px;
+    overflow:scroll;
+  }
+.container h1{
+  color: white;
+}
+.message_box li{
+  background: rgba(255, 255, 255, 0.7);
+  width: 80%;
+  color:#116286;
+  border-radius: 0.5em;
+  box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  padding: 10px;
+  list-style-type: none;
+}
+.form-row input{
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.2em;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.mybtn{
+  background-color: white;
+  color: #278e8b;
+  border-color: transparent;
+}
+
+.mybtn:hover{
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-color: transparent;
+}
+
+</style>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="text-center mt-5">Vision plus </h1>
+    <div class="big_box m-5 pt-5">
+    <div class="row">
+    <div class="message_box col" >
+        <ul id="message_list"></ul>
+  </div>
+  </div>
+<form class="form-row" id="message_form">
+
+   <div class="form-group mx-sm-3 mb-2 col-7">
+    <input type="text" class="form-control" id="text_area" autocomplete="on" />
+  </div>
+  <button class="btn mybtn mb-2 col-2" >Send</button>
+</form>
+</div>
+  </div>
+</body>
+
+<script>
+    const socket = io();
+    //const encrypt = require('socket.io-encrypt');
+
+    const username = window.prompt("Enter the username");
+    socket.emit('add user', username);
+
+    const messageForm = document.getElementById('message_form');
+    const textInput = document.getElementById('text_area');
+
+    messageForm.addEventListener('submit', function(e) {
+    //  encrypt('secret')(socket);
+        e.preventDefault();
+        if (textInput.value) {
+          socket.emit('new message', textInput.value);
+            textInput.value = '';
+        }
+    });
+
+
+
+
+    socket.on('send message', (data) => {
+        const messageList = document.getElementById('message_list');
+        const chatItem = document.createElement('li');
+        chatItem.textContent = data.user + ' : ' + data.message;
+        messageList.appendChild(chatItem);
+    });
+
+
+
+</script>
+
+</html>

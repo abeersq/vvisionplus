@@ -82,7 +82,7 @@ html, body {
 
 <script>
     const socket = io();
-    //const encrypt = require('socket.io-encrypt');
+   const encrypt = require('socket.io-encrypt');
 
     const username = window.prompt("Enter the username");
     socket.emit('add user', username);
@@ -91,17 +91,13 @@ html, body {
     const textInput = document.getElementById('text_area');
 
     messageForm.addEventListener('submit', function(e) {
-    //  encrypt('secret')(socket);
+        encrypt('secret')(socket);
         e.preventDefault();
         if (textInput.value) {
           socket.emit('new message', textInput.value);
             textInput.value = '';
         }
     });
-
-
-
-
     socket.on('send message', (data) => {
         const messageList = document.getElementById('message_list');
         const chatItem = document.createElement('li');
